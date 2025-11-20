@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>九人團隊・人類圖戰略總部</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --sidebar-width: 260px;
+            --card-bg: #ffffff;
+            --danger-color: #e74c3c;
+            --warning-bg: #fff3cd;
+            --highlight-bg: #e8f4f8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft JhengHei", "Helvetica Neue", Arial, sans-serif; }
+        
+        body { display: flex; background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .brand {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding: 0 20px;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+        }
+
+        .nav-group { margin-bottom: 15px; }
+        .nav-group-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            padding: 5px 25px;
+            letter-spacing: 1px;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.8);
+            padding: 12px 25px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-btn:hover { background-color: rgba(255,255,255,0.1); color: white; padding-left: 30px; }
+        .nav-btn.active { background-color: var(--accent-color); color: white; border-left: 5px solid #2980b9; font-weight: bold; }
+        .nav-role { font-size: 0.8rem; opacity: 0.7; }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        /* Sections */
+        .section { display: none; animation: fadeIn 0.5s; }
+        .section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Headers */
+        h1 { font-size: 2.2rem; margin-bottom: 10px; color: var(--primary-color); }
+        h2 { font-size: 1.5rem; margin-bottom: 20px; border-left: 5px solid var(--accent-color); padding-left: 15px; color: var(--primary-color); }
+        .subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 1.1rem; }
+
+        /* Cards & Tables */
+        .card { background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; color: #555; font-weight: 600; }
+        tr:hover { background-color: #fafafa; }
+
+        /* Tags */
+        .tag { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; margin-right: 5px; margin-bottom: 5px; font-weight: bold; }
+        .tag-type { background-color: #e0f7fa; color: #006064; }
+        .tag-role { background-color: #f3e5f5; color: #4a148c; }
+        .tag-auth { background-color: #e8f5e9; color: #1b5e20; }
+        .tag-hsp { background-color: #ffebee; color: #b71c1c; border: 1px solid #ffcdd2; }
+
+        /* Detail Grid */
+        .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .info-block { margin-bottom: 20px; }
+        .info-label { font-weight: bold; color: #7f8c8d; font-size: 0.9rem; display: block; margin-bottom: 5px; }
+        .info-value { font-size: 1.1rem; color: #2c3e50; line-height: 1.6; }
+
+        /* Highlight Boxes */
+        .box-manual { background-color: var(--highlight-bg); border-left: 4px solid var(--accent-color); padding: 20px; border-radius: 0 8px 8px 0; margin: 20px 0; }
+        .box-danger { background-color: #fff5f5; border-left: 4px solid var(--danger-color); padding: 20px; border-radius: 0 8px 8px 0; margin: 20px 0; }
+        .box-danger h3 { color: var(--danger-color); margin-bottom: 10px; font-size: 1.2rem; display: flex; align-items: center; }
+        
+        /* Strategic Map */
+        .strat-map { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 30px; }
+        .strat-step { background: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; box-shadow: 0 3px 10px rgba(0,0,0,0.05); display: flex; align-items: center; border: 1px solid #eee; }
+        .arrow { color: #ccc; font-size: 1.5rem; margin: 0 5px; }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: relative; padding: 10px 0; flex-direction: row; overflow-x: auto; white-space: nowrap; }
+            .brand { display: none; }
+            .nav-group-title { display: none; }
+            .nav-btn { width: auto; padding: 10px 20px; border-radius: 20px; margin: 5px; border-left: none; background: rgba(255,255,255,0.1); }
+            .nav-btn.active { background-color: var(--accent-color); border-left: none; }
+            .nav-role { display: none; }
+            .main-content { margin-left: 0; width: 100%; padding: 20px; }
+            .strat-step { font-size: 0.9rem; padding: 10px 15px; }
+            table { display: block; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="brand">HUMAN DESIGN<br>TEAM</div>
+        
+        <button class="nav-btn active" onclick="showTab('overview')">
+            <span>📊 戰略總表</span>
+        </button>
+
+        <div class="nav-group">
+            <div class="nav-group-title">大腦與發起</div>
+            <button class="nav-btn" onclick="showTab('yiting')"><span>依庭</span><span class="nav-role">國王</span></button>
+            <button class="nav-btn" onclick="showTab('alice')"><span>Alice</span><span class="nav-role">軍師</span></button>
+            <button class="nav-btn" onclick="showTab('sunny')"><span>晴日</span><span class="nav-role">國師</span></button>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-group-title">導航與修正</div>
+            <button class="nav-btn" onclick="showTab('cindy')"><span>Cindy</span><span class="nav-role">導航</span></button>
+            <button class="nav-btn" onclick="showTab('chris')"><span>Chris</span><span class="nav-role">修理</span></button>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-group-title">執行與落地</div>
+            <button class="nav-btn" onclick="showTab('f')"><span>F</span><span class="nav-role">將軍</span></button>
+            <button class="nav-btn" onclick="showTab('jp')"><span>JP</span><span class="nav-role">智者</span></button>
+            <button class="nav-btn" onclick="showTab('jiuan')"><span>酒安</span><span class="nav-role">外交</span></button>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-group-title">核心與後勤</div>
+            <button class="nav-btn" onclick="showTab('kathy')"><span>Kathy</span><span class="nav-role">守護</span></button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        
+        <div id="overview" class="container section active">
+            <h1>🚀 九人團隊戰略總部</h1>
+            <p class="subtitle">Strategic Blueprint & Team Overview</p>
+
+            <div class="card">
+                <h2>黃金運作法則</h2>
+                <div class="strat-map">
+                    <div class="strat-step">👑 依庭發起</div><div class="arrow">➜</div>
+                    <div class="strat-step">🧠 雙軍師策劃</div><div class="arrow">➜</div>
+                    <div class="strat-step">🧭 Cindy 導航</div><div class="arrow">➜</div>
+                    <div class="strat-step">⚔️ 生產者執行</div><div class="arrow">➜</div>
+                    <div class="strat-step">🏠 Kathy 穩固</div>
+                </div>
+                <p style="text-align: center; color: #7f8c8d; font-style: italic;">⚠️ 決策時差提醒：僅 依庭 & Cindy 可當下決策，其餘 7 人皆需「等待」。</p>
+            </div>
+
+            <div class="card">
+                <h2>戰鬥位置總覽</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>角色擔當</th>
+                            <th>姓名</th>
+                            <th>類型</th>
+                            <th>核心功能</th>
+                            <th>關鍵指南</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="tag tag-role">破局先鋒</span></td>
+                            <td><strong>依庭</strong></td>
+                            <td>顯示者</td>
+                            <td>【衝撞】踹開大門，殺出血路。</td>
+                            <td>給予絕對自由。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-role">總軍師</span></td>
+                            <td><strong>Alice</strong></td>
+                            <td>投射者</td>
+                            <td>【策略】解決具體問題與流程。</td>
+                            <td>需正式邀請。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-role">國師</span></td>
+                            <td><strong>晴日</strong></td>
+                            <td>投射者</td>
+                            <td>【覺醒】喚醒眾人，看見願景。</td>
+                            <td>別催促，給空間。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-role">導航員</span></td>
+                            <td><strong>Cindy</strong></td>
+                            <td>生產者</td>
+                            <td>【防呆】直覺確認方向正確性。</td>
+                            <td>相信她的直覺。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-role">修理工</span></td>
+                            <td><strong>Chris</strong></td>
+                            <td>生產者</td>
+                            <td>【優化】修正歪掉的邏輯軌道。</td>
+                            <td>聽他說完邏輯。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-role">建造者</span></td>
+                            <td><strong>F</strong></td>
+                            <td>顯生</td>
+                            <td>【落實】最強續航，想法變實體。</td>
+                            <td>心情平穩後再衝。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-role">智者</span></td>
+                            <td><strong>JP</strong></td>
+                            <td>顯生</td>
+                            <td>【試錯】親身嘗試，轉化為智慧。</td>
+                            <td>包容錯誤與嘗試。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-role">外交官</span></td>
+                            <td><strong>酒安</strong></td>
+                            <td>顯生</td>
+                            <td>【連結】對外拓展，帶入新氣象。</td>
+                            <td>給予變動與流動。</td>
+                        </tr>
+                        <tr>
+                            <td><span class="tag tag-role">築巢者</span></td>
+                            <td><strong>Kathy</strong></td>
+                            <td>生產者</td>
+                            <td>【穩固】建立溫暖公平的基地。</td>
+                            <td>公平對待與尊重。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="yiting" class="container section">
+            <h1>依庭 <small style="font-size: 0.5em; color: #7f8c8d;">Yi-Ting</small></h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">顯示者</span>
+                    <span class="tag tag-auth">直覺型權威</span>
+                    <span class="tag tag-role">2/4 人生角色</span>
+                    <span class="tag tag-hsp">高敏感 HSP</span>
+                </div>
+                <h2>👑 破局先鋒 (The King)</h2>
+                <div class="detail-grid">
+                    <div>
+                        <span class="info-label">戰略定位</span>
+                        <p class="info-value">團隊的箭頭與國王。負責在混亂中無中生有，發起行動。為了打破僵局而生。</p>
+                    </div>
+                    <div>
+                        <span class="info-label">靈魂劇本：張力</span>
+                        <p class="info-value">「製造必要的緊張感，逼迫現狀改變。」</p>
+                    </div>
+                </div>
+                
+                <div class="box-manual">
+                    <h3>✅ 正確使用說明書</h3>
+                    <ul>
+                        <li><strong>決策速度：極快。</strong> 當下覺得不對就撤，覺得對就衝。別問理由，直覺沒邏輯。</li>
+                        <li><strong>溝通方式：</strong> 給予絕對的「自主權」。只要她有「告知」要做什麼，就放手讓她去。</li>
+                    </ul>
+                </div>
+
+                <div class="box-danger">
+                    <h3>💣 絕對地雷 (Do Not)</h3>
+                    <ul>
+                        <li><strong>擋路 / 管她：</strong> 試圖控制她的行動或微觀管理，會引發她的「憤怒」。</li>
+                        <li><strong>一直問為什麼：</strong> 她的直覺很難解釋，逼問會讓她煩躁當機。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="alice" class="container section">
+            <h1>Alice</h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">投射者</span>
+                    <span class="tag tag-auth">意志力權威</span>
+                    <span class="tag tag-role">5/1 人生角色</span>
+                    <span class="tag tag-hsp">高敏感 HSP</span>
+                </div>
+                <h2>🧠 總軍師 (The Strategist)</h2>
+                <div class="detail-grid">
+                    <div>
+                        <span class="info-label">戰略定位</span>
+                        <p class="info-value">團隊的眼睛與宰相。入世的軍師，負責看見盲點，將目標轉化為具體可執行的戰術。</p>
+                    </div>
+                    <div>
+                        <span class="info-label">靈魂劇本：療癒</span>
+                        <p class="info-value">「外科手術式的改革者，切除病灶讓系統重生。」</p>
+                    </div>
+                </div>
+                
+                <div class="box-manual">
+                    <h3>✅ 正確使用說明書</h3>
+                    <ul>
+                        <li><strong>決策依據：</strong> 意志力。只有覺得「有價值」且「做得到」時才承諾。</li>
+                        <li><strong>溝通方式：</strong> 「正式邀請」。主動問：「Alice，這件事妳怎麼看？」她會傾囊相授。</li>
+                    </ul>
+                </div>
+
+                <div class="box-danger">
+                    <h3>💣 絕對地雷 (Do Not)</h3>
+                    <ul>
+                        <li><strong>沒人問硬給建議：</strong> 會被當成嘮叨（感到苦澀）。</li>
+                        <li><strong>承諾跳票：</strong> 意志力權威的大忌，做不到會極度自我譴責。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="sunny" class="container section">
+            <h1>晴日 <small style="font-size: 0.5em; color: #7f8c8d;">Sunny</small></h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">投射者</span>
+                    <span class="tag tag-auth">情緒型權威</span>
+                    <span class="tag tag-role">6/2 人生角色</span>
+                    <span class="tag tag-hsp">三分人</span>
+                </div>
+                <h2>📯 國師 (The Visionary)</h2>
+                <div class="detail-grid">
+                    <div>
+                        <span class="info-label">戰略定位</span>
+                        <p class="info-value">團隊的靈魂與祭司。出世的智者，站在高處看世局，負責在迷失時吹響號角，喚醒眾人。</p>
+                    </div>
+                    <div>
+                        <span class="info-label">靈魂劇本：號角</span>
+                        <p class="info-value">「喚醒沉睡眾人的聲音，打破舊思維。」</p>
+                    </div>
+                </div>
+                
+                <div class="box-manual">
+                    <h3>✅ 正確使用說明書</h3>
+                    <ul>
+                        <li><strong>決策速度：極慢。</strong> 三分人+情緒型，請給他大量的時間（甚至幾天）去運算答案。</li>
+                        <li><strong>溝通方式：</strong> 邀請並給予空間。別催促，讓他去咖啡廳晃晃，腦袋會比較通。</li>
+                    </ul>
+                </div>
+
+                <div class="box-danger">
+                    <h3>💣 絕對地雷 (Do Not)</h3>
+                    <ul>
+                        <li><strong>當苦力用：</strong> 叫他做雜事是浪費他的天賦。</li>
+                        <li><strong>催促決定：</strong> 逼他在會議上立刻表態，他會當機給你看。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="cindy" class="container section">
+            <h1>Cindy</h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">生產者</span>
+                    <span class="tag tag-auth">薦骨權威</span>
+                    <span class="tag tag-role">3/5 人生角色</span>
+                    <span class="tag tag-hsp">高敏感 HSP</span>
+                </div>
+                <h2>🧭 導航員 (The Navigator)</h2>
+                <div class="detail-grid">
+                    <div>
+                        <span class="info-label">戰略定位</span>
+                        <p class="info-value">團隊的防呆機制與指南針。唯一能當下用直覺判斷路能不能走的導航員。</p>
+                    </div>
+                    <div>
+                        <span class="info-label">靈魂劇本：獅身人面</span>
+                        <p class="info-value">「給予方向，指引迷路的人。」</p>
+                    </div>
+                </div>
+                
+                <div class="box-manual">
+                    <h3>✅ 正確使用說明書</h3>
+                    <ul>
+                        <li><strong>決策依據：</strong> 薦骨直覺。身體有動力就是 YES，沒力氣就是 NO。</li>
+                        <li><strong>溝通方式：</strong> 問「是非題」。例如「我們要不要做A案？」讓她能回應。</li>
+                    </ul>
+                </div>
+
+                <div class="box-danger">
+                    <h3>💣 絕對地雷 (Do Not)</h3>
+                    <ul>
+                        <li><strong>當爛好人：</strong> 別讓她為了氣氛和諧而忽視身體的抗拒。</li>
+                        <li><strong>問開放式問題：</strong> 「妳覺得如何？」會讓她腦袋打結，請給選項。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="chris" class="container section">
+            <h1>Chris</h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">生產者</span>
+                    <span class="tag tag-auth">情緒型權威</span>
+                    <span class="tag tag-role">5/1 人生角色</span>
+                </div>
+                <h2>🔧 修理工 (The Fixer)</h2>
+                <div class="detail-grid">
+                    <div>
+                        <span class="info-label">戰略定位</span>
+                        <p class="info-value">團隊的校準器。擁有獨特邏輯，能看出計畫哪裡歪掉，並負責修正軌道。</p>
+                    </div>
+                    <div>
+                        <span class="info-label">靈魂劇本：校準</span>
+                        <p class="info-value">「修正錯誤，讓脫軌的事物回到正軌。」</p>
+                    </div>
+                </div>
+                
+                <div class="box-manual">
+                    <h3>✅ 正確使用說明書</h3>
+                    <ul>
+                        <li><strong>決策速度：慢。</strong> 切勿衝動承諾，睡一覺起來覺得還想做，才是真的。</li>
+                        <li><strong>溝通方式：</strong> 聽他說完。他的跳躍性思考需要時間鋪陳，別打斷他。</li>
+                    </ul>
+                </div>
+
+                <div class="box-danger">
+                    <h3>💣 絕對地雷 (Do Not)</h3>
+                    <ul>
+                        <li><strong>微觀管理：</strong> 討厭笨蛋主管教他怎麼做事。</li>
+                        <li><strong>被打斷：</strong> 當他的專業見解被忽視或打斷時，會感到極度挫敗。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="f" class="container section">
+            <h1>F</h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">顯示生產者</span>
+                    <span class="tag tag-auth">情緒型權威</span>
+                    <span class="tag tag-role">5/2 人生角色</span>
+                </div>
+                <h2>🏗️ 建造者 (The Builder)</h2>
+                <div class="detail-grid">
+                    <div>
+                        <span class="info-label">戰略定位</span>
+                        <p class="info-value">團隊的大將軍。續航力最強，將想法實體化。一旦開工，效率無人能敵。</p>
+                    </div>
+                    <div>
+                        <span class="info-label">靈魂劇本：勤奮</span>
+                        <p class="info-value">「透過具體的行動與勞動，展現成果。」</p>
+                    </div>
+                </div>
+                
+                <div class="box-manual">
+                    <h3>✅ 正確使用說明書</h3>
+                    <ul>
+                        <li><strong>決策速度：慢中求快。</strong> 情緒平穩後的行動才精準有效率。</li>
+                        <li><strong>溝通方式：</strong> 給予明確目標。確認方向後就別擋她的路。</li>
+                    </ul>
+                </div>
+
+                <div class="box-danger">
+                    <h3>💣 絕對地雷 (Do Not)</h3>
+                    <ul>
+                        <li><strong>做白工：</strong> 發現忙了半天方向卻是錯的，會讓她崩潰。</li>
+                        <li><strong>被迫煞車：</strong> 當她全速運轉時，別隨意打斷她的節奏。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="jp" class="container section">
+            <h1>JP</h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">顯示生產者</span>
+                    <span class="tag tag-auth">情緒型權威</span>
+                    <span class="tag tag-role">1/3 人生角色</span>
+                </div>
+                <h2>🧪 智者 (The Alchemist)</h2>
+                <div class="detail-grid">
+                    <div>
+                        <span class="info-label">戰略定位</span>
+                        <p class="info-value">團隊的煉金術士。透過親身試錯，將失敗經驗轉化為團隊的生存智慧。</p>
+                    </div>
+                    <div>
+                        <span class="info-label">靈魂劇本：伊甸園</span>
+                        <p class="info-value">「經歷失落與幻滅，將智慧帶回人間。」</p>
+                    </div>
+                </div>
+                
+                <div class="box-manual">
+                    <h3>✅ 正確使用說明書</h3>
+                    <ul>
+                        <li><strong>決策速度：慢。</strong> 別在情緒高漲或低落時做決定。</li>
+                        <li><strong>溝通方式：</strong> 包容試錯。鼓勵他嘗試，並聽他分享「哪裡行不通」。</li>
+                    </ul>
+                </div>
+
+                <div class="box-danger">
+                    <h3>💣 絕對地雷 (Do Not)</h3>
+                    <ul>
+                        <li><strong>指責犯錯：</strong> 用「你怎麼又失敗了」來打擊他，會扼殺他的天賦。</li>
+                        <li><strong>鑽牛角尖：</strong> 別一直逼問細節，他跳躍思考懶得解釋太多遍。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="jiuan" class="container section">
+            <h1>酒安 <small style="font-size: 0.5em; color: #7f8c8d;">Jiuan</small></h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">顯示生產者</span>
+                    <span class="tag tag-auth">情緒型權威</span>
+                    <span class="tag tag-role">3/5 人生角色</span>
+                </div>
+                <h2>🌍 外交官 (The Adventurer)</h2>
+                <div class="detail-grid">
+                    <div>
+                        <span class="info-label">戰略定位</span>
+                        <p class="info-value">團隊的冒險家。負責對外連結、開發新市場，帶入新鮮感與變動。</p>
+                    </div>
+                    <div>
+                        <span class="info-label">靈魂劇本：伊甸園</span>
+                        <p class="info-value">「情感豐富的體驗者，帶來連結的火花。」</p>
+                    </div>
+                </div>
+                
+                <div class="box-manual">
+                    <h3>✅ 正確使用說明書</h3>
+                    <ul>
+                        <li><strong>決策速度：慢。</strong> 對新事物興奮時，請忍一下，睡一覺再決定。</li>
+                        <li><strong>溝通方式：</strong> 給予新鮮感。讓她去接觸新人事物，別綁死在位置上。</li>
+                    </ul>
+                </div>
+
+                <div class="box-danger">
+                    <h3>💣 絕對地雷 (Do Not)</h3>
+                    <ul>
+                        <li><strong>枯燥重複：</strong> 死板的行政工作會讓她能量枯竭。</li>
+                        <li><strong>限制行動：</strong> 別限制她的流動性，她需要跑動。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="kathy" class="container section">
+            <h1>Kathy</h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">生產者</span>
+                    <span class="tag tag-auth">情緒型權威</span>
+                    <span class="tag tag-role">5/2 人生角色</span>
+                </div>
+                <h2>🏠 築巢者 (The Guardian)</h2>
+                <div class="detail-grid">
+                    <div>
+                        <span class="info-label">戰略定位</span>
+                        <p class="info-value">團隊的守護者與後勤基地。負責凝聚人心，建立公平、溫暖的歸屬感。</p>
+                    </div>
+                    <div>
+                        <span class="info-label">靈魂劇本：遷移</span>
+                        <p class="info-value">「為了更好的生活而建立社群，照顧好自己人。」</p>
+                    </div>
+                </div>
+                
+                <div class="box-manual">
+                    <h3>✅ 正確使用說明書</h3>
+                    <ul>
+                        <li><strong>決策速度：慢。</strong> 需要長時間的情緒沉澱，不要催她。</li>
+                        <li><strong>溝通方式：</strong> 溫情與尊重。感謝她的付出，並給予她足夠的獨處時間。</li>
+                    </ul>
+                </div>
+
+                <div class="box-danger">
+                    <h3>💣 絕對地雷 (Do Not)</h3>
+                    <ul>
+                        <li><strong>不公平對待：</strong> 若覺得只有自己在付出，會瞬間心冷並切斷關係。</li>
+                        <li><strong>被催促：</strong> 逼她按別人的時間表做事會讓她混亂。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function showTab(tabId) {
+            // 隱藏所有區塊
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // 移除所有按鈕激活狀態
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // 顯示目標區塊
+            const targetSection = document.getElementById(tabId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                // 捲動到頂部
+                window.scrollTo(0, 0);
+            }
+
+            // 激活點擊的按鈕 (這部分邏輯簡單處理，抓取點擊事件的當下元素)
+            const clickedBtn = event.currentTarget;
+            clickedBtn.classList.add('active');
+
+            // 如果是手機版，點擊後可考慮自動收合 Sidebar (此處暫略以保持簡單)
+        }
+    </script>
+</body>
+</html>
