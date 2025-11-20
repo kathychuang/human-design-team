@@ -23,7 +23,7 @@
         body { display: flex; background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; }
 
         /* =========================================
-           DESKTOP STYLES (電腦版樣式)
+           電腦版樣式 (Desktop)
            ========================================= */
         .sidebar {
             width: var(--sidebar-width);
@@ -32,10 +32,12 @@
             display: flex;
             flex-direction: column;
             padding: 20px 0;
-            position: fixed;
-            height: 100%;
+            position: fixed; /* 固定在左側 */
+            top: 0;
+            bottom: 0;
+            left: 0;
             overflow-y: auto;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .brand {
@@ -49,21 +51,14 @@
             padding-bottom: 20px;
         }
 
-        /* 電腦版導航群組 */
         .nav-group { margin-bottom: 15px; display: block; }
-        .nav-group-title {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.5);
-            padding: 5px 25px;
-            letter-spacing: 1px;
-        }
-
+        
+        /* 按鈕樣式修正，確保可點擊 */
         .nav-btn {
             background: none;
             border: none;
             color: rgba(255,255,255,0.8);
-            padding: 12px 25px;
+            padding: 15px 25px; /* 加大點擊範圍 */
             width: 100%;
             text-align: left;
             cursor: pointer;
@@ -72,33 +67,34 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            outline: none;
         }
 
         .nav-btn:hover { background-color: rgba(255,255,255,0.1); color: white; padding-left: 30px; }
         .nav-btn.active { background-color: var(--accent-color); color: white; border-left: 5px solid #2980b9; font-weight: bold; }
+        .nav-role { font-size: 0.8rem; opacity: 0.7; }
         
         /* 配對按鈕特殊色 */
         .nav-btn.pair-btn { color: #ff9ff3; }
         .nav-btn.pair-btn.active { background-color: var(--love-color); border-left-color: #fd79a8; }
 
-        .nav-role { font-size: 0.8rem; opacity: 0.7; }
-
-        /* 主要內容區 */
+        /* 主要內容區 - 確保不被遮擋 */
         .main-content {
             margin-left: var(--sidebar-width);
             flex: 1;
             padding: 40px;
             width: calc(100% - var(--sidebar-width));
+            min-height: 100vh;
         }
 
-        .container { max-width: 1000px; margin: 0 auto; }
+        .container { max-width: 1000px; margin: 0 auto; padding-bottom: 50px; }
 
         /* 切換顯示機制 */
-        .section { display: none; animation: fadeIn 0.5s; }
+        .section { display: none; animation: fadeIn 0.4s; }
         .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 通用元件樣式 */
+        /* 通用元件 */
         h1 { font-size: 2.2rem; margin-bottom: 10px; color: var(--primary-color); }
         h2 { font-size: 1.5rem; margin-bottom: 20px; border-left: 5px solid var(--accent-color); padding-left: 15px; color: var(--primary-color); }
         .subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 1.1rem; }
@@ -109,51 +105,519 @@
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
         th { background-color: #f8f9fa; color: #555; font-weight: 600; }
         tr:hover { background-color: #fafafa; }
-        
+
         /* 標籤 */
         .tag { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; margin-right: 5px; margin-bottom: 5px; font-weight: bold; }
-        .tag-type { background-color: #e0f7fa; color: #006064; font-size: 0.75rem; }
+        .tag-type { background-color: #e0f7fa; color: #006064; }
         .tag-role { background-color: #f3e5f5; color: #4a148c; }
         .tag-auth { background-color: #e8f5e9; color: #1b5e20; }
         .tag-hsp { background-color: #ffebee; color: #b71c1c; border: 1px solid #ffcdd2; }
 
         /* 詳細資訊網格 */
         .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .info-block { margin-bottom: 20px; }
         .info-label { font-weight: bold; color: #7f8c8d; font-size: 0.9rem; display: block; margin-bottom: 5px; }
         .info-value { font-size: 1.1rem; color: #2c3e50; line-height: 1.6; }
 
-        /* 重點提示框 */
+        /* 提示框 */
         .box-manual { background-color: var(--highlight-bg); border-left: 4px solid var(--accent-color); padding: 20px; border-radius: 0 8px 8px 0; margin: 20px 0; }
         .box-danger { background-color: #fff5f5; border-left: 4px solid var(--danger-color); padding: 20px; border-radius: 0 8px 8px 0; margin: 20px 0; }
-        .box-danger h3 { color: var(--danger-color); margin-bottom: 10px; font-size: 1.2rem; display: flex; align-items: center; }
 
-        /* 戰略流程圖 */
+        /* 戰略圖 */
         .strat-map { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 30px; }
-        .strat-step { background: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; box-shadow: 0 3px 10px rgba(0,0,0,0.05); display: flex; align-items: center; border: 1px solid #eee; }
-        .arrow { color: #ccc; font-size: 1.5rem; margin: 0 5px; }
+        .strat-step { background: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
 
-        /* 配對區塊樣式 */
+        /* 配對控制 */
         .pairing-controls { display: grid; grid-template-columns: 1fr 1fr auto; gap: 20px; align-items: end; margin-bottom: 30px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .control-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
         .control-group select { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; font-size: 1rem; background: #fff; cursor: pointer; }
-        .analyze-btn { background-color: var(--love-color); color: white; border: none; padding: 12px 30px; font-size: 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; height: 48px; transition: transform 0.2s; }
+        .analyze-btn { background-color: var(--love-color); color: white; border: none; padding: 12px 30px; font-size: 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; height: 48px; }
         .analyze-btn:hover { transform: scale(1.05); background-color: #d63078; }
-        
-        .result-card { display: none; border-top: 5px solid var(--love-color); animation: slideUp 0.5s ease; }
+        .result-card { display: none; border-top: 5px solid var(--love-color); }
         .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .result-names { font-size: 1.5rem; font-weight: bold; color: var(--primary-color); }
         .match-score { background: var(--love-color); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; }
         .result-block { margin-bottom: 20px; }
-        .result-block h3 { color: #555; font-size: 1.1rem; margin-bottom: 8px; display: flex; align-items: center; }
-        .result-block h3::before { content: '✦'; color: var(--love-color); margin-right: 8px; }
         .result-text { font-size: 1.05rem; line-height: 1.6; color: #444; background: #fafafa; padding: 15px; border-radius: 8px; white-space: pre-line; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* =========================================
-           MOBILE STYLES (手機版樣式) - 3x3 GRID
+           手機版樣式 (Mobile)
            ========================================= */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             
-            /* 1. 導覽列：3x
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                position: relative; /* 手機版改為相對定位 */
+                padding: 10px; 
+                display: grid; 
+                grid-template-columns: repeat(3, 1fr); 
+                gap: 8px; 
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                z-index: 999;
+            }
+
+            .brand, .nav-group-title, .nav-role { display: none; }
+            .nav-group { display: contents; } /* 讓按鈕直接參與 Grid */
+
+            .nav-btn { 
+                width: 100%; 
+                padding: 12px 2px; 
+                border-radius: 8px; 
+                margin: 0; 
+                border-left: none; 
+                background: rgba(255,255,255,0.15); 
+                justify-content: center;
+                text-align: center;
+                font-size: 0.9rem;
+            }
+            
+            .nav-btn:hover { background: rgba(255,255,255,0.25); }
+
+            /* 橫跨整排的按鈕 */
+            .sidebar > .nav-btn:first-of-type { grid-column: 1 / -1; background-color: var(--accent-color); font-weight: bold; margin-bottom: 5px; }
+            .nav-btn.pair-btn { grid-column: 1 / -1; order: -1; margin-bottom: 5px; background-color: var(--love-color); color: white; font-weight: bold; }
+
+            .main-content { margin-left: 0; width: 100%; padding: 15px; }
+            
+            .pairing-controls { grid-template-columns: 1fr; gap: 15px; }
+            .analyze-btn { width: 100%; }
+            
+            /* 表格轉卡片 */
+            table, thead, tbody, th, td, tr { display: block; }
+            thead { display: none; }
+            tbody { display: grid; grid-template-columns: 1fr; gap: 10px; }
+            tr { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; }
+            td { padding: 5px 0; border: none; font-size: 0.9rem; }
+            td:nth-of-type(2) { font-weight: bold; font-size: 1.1rem; color: var(--primary-color); }
+            td:nth-of-type(3), td:nth-of-type(5) { display: none; } /* 手機隱藏部分欄位 */
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="brand">HUMAN DESIGN<br>TEAM</div>
+        
+        <button class="nav-btn active" onclick="showTab('overview', this)">
+            <span>📊 戰略總表</span>
+        </button>
+        
+        <button class="nav-btn pair-btn" onclick="showTab('pairing', this)">
+            <span>❤️ 自由配對</span>
+        </button>
+
+        <div class="nav-group">
+            <button class="nav-btn" onclick="showTab('yiting', this)"><span>特拉</span><span class="nav-role">國王</span></button>
+            <button class="nav-btn" onclick="showTab('alice', this)"><span>Alice</span><span class="nav-role">軍師</span></button>
+            <button class="nav-btn" onclick="showTab('sunny', this)"><span>晴日</span><span class="nav-role">國師</span></button>
+            <button class="nav-btn" onclick="showTab('cindy', this)"><span>Cindy</span><span class="nav-role">導航</span></button>
+            <button class="nav-btn" onclick="showTab('chris', this)"><span>麼麼</span><span class="nav-role">修理</span></button>
+            <button class="nav-btn" onclick="showTab('f', this)"><span>Fay</span><span class="nav-role">將軍</span></button>
+            <button class="nav-btn" onclick="showTab('jp', this)"><span>JP</span><span class="nav-role">智者</span></button>
+            <button class="nav-btn" onclick="showTab('jiuan', this)"><span>酒安</span><span class="nav-role">外交</span></button>
+            <button class="nav-btn" onclick="showTab('kathy', this)"><span>凱西</span><span class="nav-role">守護</span></button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        
+        <div id="pairing" class="container section">
+            <h1>❤️ 雙人互動實驗室</h1>
+            <p class="subtitle">Select any two members to analyze their chemistry.</p>
+
+            <div class="pairing-controls">
+                <div class="control-group">
+                    <label>選擇成員 A</label>
+                    <select id="personA">
+                        <option value="">請選擇...</option>
+                        <option value="yiting">特拉 (顯示者)</option>
+                        <option value="alice">Alice (投射者)</option>
+                        <option value="sunny">晴日 (投射者)</option>
+                        <option value="cindy">Cindy (生產者)</option>
+                        <option value="chris">麼麼 (生產者)</option>
+                        <option value="f">Fay (顯生)</option>
+                        <option value="jp">JP (顯生)</option>
+                        <option value="jiuan">酒安 (顯生)</option>
+                        <option value="kathy">凱西 (生產者)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>選擇成員 B</label>
+                    <select id="personB">
+                        <option value="">請選擇...</option>
+                        <option value="yiting">特拉 (顯示者)</option>
+                        <option value="alice">Alice (投射者)</option>
+                        <option value="sunny">晴日 (投射者)</option>
+                        <option value="cindy">Cindy (生產者)</option>
+                        <option value="chris">麼麼 (生產者)</option>
+                        <option value="f">Fay (顯生)</option>
+                        <option value="jp">JP (顯生)</option>
+                        <option value="jiuan">酒安 (顯生)</option>
+                        <option value="kathy">凱西 (生產者)</option>
+                    </select>
+                </div>
+                <button class="analyze-btn" onclick="analyzePair()">開始分析 ✨</button>
+            </div>
+
+            <div id="pairResult" class="card result-card">
+                <div class="result-header">
+                    <div class="result-names" id="resNames">A & B</div>
+                    <div class="match-score" id="resType">互動模式</div>
+                </div>
+                
+                <div class="result-block">
+                    <h3>⚡ 能量化學反應</h3>
+                    <div class="result-text" id="resEnergy">...</div>
+                </div>
+
+                <div class="result-block">
+                    <h3>🔌 潛在通道連線</h3>
+                    <div class="result-text" id="resChannels">...</div>
+                </div>
+
+                <div class="result-block">
+                    <h3>💡 簡短相處建議</h3>
+                    <div class="result-text" id="resAdvice">...</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="overview" class="container section active">
+            <h1>🚀 九人團隊戰略總部</h1>
+            <p class="subtitle">Strategic Blueprint & Team Overview</p>
+
+            <div class="card">
+                <h2>黃金運作法則</h2>
+                <div class="strat-map">
+                    <div class="strat-step">1. 👑 特拉 發起</div>
+                    <div class="strat-step">2. 🧠 雙軍師 策劃</div>
+                    <div class="strat-step">3. 🧭 Cindy 導航</div>
+                    <div class="strat-step">4. ⚔️ 生產者 執行</div>
+                    <div class="strat-step">5. 🏠 凱西 穩固</div>
+                </div>
+            </div>
+
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <h2 style="margin: 20px 20px 10px 20px;">戰鬥位置總覽</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>角色</th>
+                            <th>姓名</th>
+                            <th>類型</th>
+                            <th>核心功能</th>
+                            <th>指南</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="tag tag-role">破局先鋒</span></td><td>特拉</td><td>顯示者</td><td>踹開大門，殺出血路。</td><td>給予絕對自由。</td></tr>
+                        <tr><td><span class="tag tag-role">總軍師</span></td><td>Alice</td><td>投射者</td><td>解決具體問題與流程。</td><td>需正式邀請。</td></tr>
+                        <tr><td><span class="tag tag-role">國師</span></td><td>晴日</td><td>投射者</td><td>喚醒眾人，看見願景。</td><td>別催促，給空間。</td></tr>
+                        <tr><td><span class="tag tag-role">導航員</span></td><td>Cindy</td><td>生產者</td><td>直覺確認方向正確性。</td><td>相信她的直覺。</td></tr>
+                        <tr><td><span class="tag tag-role">修理工</span></td><td>麼麼</td><td>生產者</td><td>修正歪掉的邏輯軌道。</td><td>聽他說完邏輯。</td></tr>
+                        <tr><td><span class="tag tag-role">建造者</span></td><td>Fay</td><td>顯生</td><td>最強續航，想法變實體。</td><td>心情平穩後再衝。</td></tr>
+                        <tr><td><span class="tag tag-role">智者</span></td><td>JP</td><td>顯生</td><td>親身嘗試，轉化為智慧。</td><td>包容錯誤與嘗試。</td></tr>
+                        <tr><td><span class="tag tag-role">外交官</span></td><td>酒安</td><td>顯生</td><td>對外拓展，帶入新氣象。</td><td>給予變動與流動。</td></tr>
+                        <tr><td><span class="tag tag-role">築巢者</span></td><td>凱西</td><td>生產者</td><td>建立溫暖公平的基地。</td><td>公平對待與尊重。</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="yiting" class="container section">
+            <h1>特拉 <small>Yi-Ting</small></h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">顯示者</span>
+                    <span class="tag tag-auth">直覺型權威</span>
+                    <span class="tag tag-role">2/4 人生角色</span>
+                </div>
+                <h2>👑 破局先鋒 (The King)</h2>
+                <div class="detail-grid">
+                    <div><span class="info-label">戰略定位</span><p class="info-value">團隊的箭頭與國王。負責在混亂中無中生有，發起行動。</p></div>
+                    <div><span class="info-label">使用說明</span><p class="info-value">決策速度極快。給予絕對自主權，只要她有「告知」就放手讓她去。</p></div>
+                </div>
+                <div class="box-danger"><h3>💣 絕對地雷</h3>擋路、管她、一直問「為什麼」（直覺很難解釋）。</div>
+            </div>
+        </div>
+
+        <div id="alice" class="container section">
+            <h1>Alice</h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">投射者</span>
+                    <span class="tag tag-auth">意志力權威</span>
+                    <span class="tag tag-role">5/1 人生角色</span>
+                </div>
+                <h2>🧠 總軍師 (The Strategist)</h2>
+                <div class="detail-grid">
+                    <div><span class="info-label">戰略定位</span><p class="info-value">負責看見盲點，將目標轉化為具體可執行的戰術。</p></div>
+                    <div><span class="info-label">使用說明</span><p class="info-value">需「正式邀請」才能發揮最大效用。意志力權威，承諾必達。</p></div>
+                </div>
+                <div class="box-danger"><h3>💣 絕對地雷</h3>沒人問硬給建議（會苦澀）、承諾跳票。</div>
+            </div>
+        </div>
+
+        <div id="sunny" class="container section">
+            <h1>晴日 <small>Sunny</small></h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">投射者</span>
+                    <span class="tag tag-auth">情緒型權威</span>
+                    <span class="tag tag-role">6/2 人生角色</span>
+                </div>
+                <h2>📯 國師 (The Visionary)</h2>
+                <div class="detail-grid">
+                    <div><span class="info-label">戰略定位</span><p class="info-value">站在高處看世局，負責在迷失時吹響號角，喚醒眾人。</p></div>
+                    <div><span class="info-label">使用說明</span><p class="info-value">決策極慢（情緒+三分人）。請給他大量空間與時間，別催促。</p></div>
+                </div>
+                <div class="box-danger"><h3>💣 絕對地雷</h3>當苦力用、逼他當下做決定。</div>
+            </div>
+        </div>
+
+        <div id="cindy" class="container section">
+            <h1>Cindy</h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">生產者</span>
+                    <span class="tag tag-auth">薦骨權威</span>
+                    <span class="tag tag-role">3/5 人生角色</span>
+                </div>
+                <h2>🧭 導航員 (The Navigator)</h2>
+                <div class="detail-grid">
+                    <div><span class="info-label">戰略定位</span><p class="info-value">團隊的防呆機制。唯一能當下用直覺判斷路能不能走的導航員。</p></div>
+                    <div><span class="info-label">使用說明</span><p class="info-value">請問「是非題」（要不要...？）讓她薦骨回應。身體有動力才是YES。</p></div>
+                </div>
+                <div class="box-danger"><h3>💣 絕對地雷</h3>問開放式問題（妳覺得如何？）、當爛好人忽視直覺。</div>
+            </div>
+        </div>
+
+        <div id="chris" class="container section">
+            <h1>麼麼 <small>Chris</small></h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">生產者</span>
+                    <span class="tag tag-auth">情緒型權威</span>
+                    <span class="tag tag-role">5/1 人生角色</span>
+                </div>
+                <h2>🔧 修理工 (The Fixer)</h2>
+                <div class="detail-grid">
+                    <div><span class="info-label">戰略定位</span><p class="info-value">能看出計畫哪裡歪掉，並修正邏輯軌道。</p></div>
+                    <div><span class="info-label">使用說明</span><p class="info-value">聽他說完。他的邏輯跳躍，需要時間鋪陳。情緒型需睡一覺再決定。</p></div>
+                </div>
+                <div class="box-danger"><h3>💣 絕對地雷</h3>微觀管理（笨蛋主管）、打斷他的邏輯推演。</div>
+            </div>
+        </div>
+
+        <div id="f" class="container section">
+            <h1>Fay <small>F</small></h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">顯示生產者</span>
+                    <span class="tag tag-auth">情緒型權威</span>
+                    <span class="tag tag-role">5/2 人生角色</span>
+                </div>
+                <h2>🏗️ 建造者 (The Builder)</h2>
+                <div class="detail-grid">
+                    <div><span class="info-label">戰略定位</span><p class="info-value">續航力最強，將想法實體化。一旦開工，效率無人能敵。</p></div>
+                    <div><span class="info-label">使用說明</span><p class="info-value">給予明確目標，確認方向正確後就別擋路。</p></div>
+                </div>
+                <div class="box-danger"><h3>💣 絕對地雷</h3>做白工（方向錯）、在她全速運轉時被迫煞車。</div>
+            </div>
+        </div>
+
+        <div id="jp" class="container section">
+            <h1>JP</h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">顯示生產者</span>
+                    <span class="tag tag-auth">情緒型權威</span>
+                    <span class="tag tag-role">1/3 人生角色</span>
+                </div>
+                <h2>🧪 智者 (The Alchemist)</h2>
+                <div class="detail-grid">
+                    <div><span class="info-label">戰略定位</span><p class="info-value">透過親身試錯，將失敗經驗轉化為團隊的生存智慧。</p></div>
+                    <div><span class="info-label">使用說明</span><p class="info-value">包容試錯，鼓勵嘗試。別在情緒高漲/低落時做決定。</p></div>
+                </div>
+                <div class="box-danger"><h3>💣 絕對地雷</h3>指責犯錯、一直逼問細節。</div>
+            </div>
+        </div>
+
+        <div id="jiuan" class="container section">
+            <h1>酒安 <small>Jiuan</small></h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">顯示生產者</span>
+                    <span class="tag tag-auth">情緒型權威</span>
+                    <span class="tag tag-role">3/5 人生角色</span>
+                </div>
+                <h2>🌍 外交官 (The Adventurer)</h2>
+                <div class="detail-grid">
+                    <div><span class="info-label">戰略定位</span><p class="info-value">負責對外連結、開發新市場，帶入新鮮感與變動。</p></div>
+                    <div><span class="info-label">使用說明</span><p class="info-value">給予新鮮感與流動性。讓她去接觸新人事物。</p></div>
+                </div>
+                <div class="box-danger"><h3>💣 絕對地雷</h3>枯燥重複的行政工作、限制她的行動自由。</div>
+            </div>
+        </div>
+
+        <div id="kathy" class="container section">
+            <h1>凱西 <small>Kathy</small></h1>
+            <div class="card">
+                <div class="info-block">
+                    <span class="tag tag-type">生產者</span>
+                    <span class="tag tag-auth">情緒型權威</span>
+                    <span class="tag tag-role">5/2 人生角色</span>
+                </div>
+                <h2>🏠 築巢者 (The Guardian)</h2>
+                <div class="detail-grid">
+                    <div><span class="info-label">戰略定位</span><p class="info-value">團隊的後勤基地。負責凝聚人心，建立公平、溫暖的歸屬感。</p></div>
+                    <div><span class="info-label">使用說明</span><p class="info-value">溫情與尊重。感謝她的付出。決策需要時間沉澱。</p></div>
+                </div>
+                <div class="box-danger"><h3>💣 絕對地雷</h3>不公平對待（覺得只有自己在付出）、被催促。</div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // 1. 基礎資料庫
+        const members = {
+            'yiting': { name: '特拉', type: 'mani' },
+            'alice': { name: 'Alice', type: 'proj' },
+            'sunny': { name: '晴日', type: 'proj' },
+            'cindy': { name: 'Cindy', type: 'gen' },
+            'chris': { name: '麼麼', type: 'gen' },
+            'f': { name: 'Fay', type: 'mg' },
+            'jp': { name: 'JP', type: 'mg' },
+            'jiuan': { name: '酒安', type: 'mg' },
+            'kathy': { name: '凱西', type: 'gen' }
+        };
+
+        // 2. VIP 關係資料庫 (36組全配對深度擴充版)
+        const relationshipDB = {
+            // Alice
+            'alice_chris': { title: '🧠 雙將軍：戰略與資源', energy: '兩位都是 5/1 人生角色，解決問題的專家。Alice 看戰略，Chris 看邏輯。', channels: '✨ 意志力共振：Alice (25-51) 與 Chris (21-45) 都重視承諾與掌控。', advice: 'Chris 請不要覺得 Alice 在管你；Alice 請主動詢問 Chris 的邏輯。' },
+            'alice_cindy': { title: '👁️ 眼睛與指南針', energy: 'Alice 幫 Cindy 說出她感覺到但說不出的直覺。', channels: '🔄 頻率引導：Cindy 的 5-15 韻律吸引 Alice。', advice: 'Alice 請多問是非題；Cindy 請相信 Alice 看見的盲點。' },
+            'alice_f': { title: '🎯 瞄準與射擊', energy: 'Fay (34-20) 容易瞎忙，Alice 能指出重點。', channels: '⚡ 薩滿與發電機：Alice (25-51) 點燃 Fay 的行動力。', advice: 'Fay 開工前請邀請 Alice 檢查計畫。' },
+            'alice_jiuan': { title: '🌍 戰略外交', energy: 'Alice 優化內部，酒安拓展外部。', channels: '🔗 情緒互補：Alice 穩定酒安的情緒波動。', advice: '酒安別把 Alice 捲入混亂；Alice 別限制酒安的流動。' },
+            'alice_jp': { title: '🧪 實驗設計師', energy: 'JP 試錯 (1/3)，Alice 歸納法則 (5/1)。', channels: '💡 個體人連線：都有變異特質，能想出顛覆方案。', advice: 'Alice 別批評錯誤，要讚賞嘗試。' },
+            'alice_kathy': { title: '🏰 內政雙塔', energy: 'Kathy 守護情感，Alice 守護流程。', channels: '🤝 意志力連線：約定是鐵律。', advice: 'Alice 請務必遵守對 Kathy 的承諾。' },
+            'alice_sunny': { title: '🔮 雙軍師連線', energy: 'Alice 處理現在，晴日看見未來。', channels: '📡 高維對話：投射者共振，不需多言。', advice: 'Alice 陷細節時找晴日；晴日太飄渺時找 Alice。' },
+            'alice_yiting': { title: '⚔️ 國王與宰相', energy: '最強權力組合。特拉授權，Alice 執行。', channels: '⚡ 25-51 發起共振：戰鬥力與開創力加倍。', advice: '特拉請邀請 Alice；Alice 請給特拉選項。' },
+            
+            // Chris
+            'chris_cindy': { title: '🔧 邏輯與直覺', energy: 'Cindy 的直覺是 Chris 邏輯的壓力測試。', channels: '🛑 薦骨煞車：Cindy 沒動力代表邏輯行不通。', advice: '以 Cindy 的直覺為最後煞車。' },
+            'chris_f': { title: '🏗️ 校準與建造', energy: 'Fay 衝很快，Chris 負責修正軌道。', channels: '⚙️ 效率優化：Chris 幫 Fay 簡化流程。', advice: 'Chris 請在 Fay 開工前介入修正。' },
+            'chris_jiuan': { title: '🎢 規律與變動', energy: 'Chris 建立秩序，酒安打破秩序。', channels: '🌊 情緒互補：注意情緒共振，好壞都加倍。', advice: 'Chris 放手讓酒安亂；酒安請 Chris 收尾。' },
+            'chris_jp': { title: '🧠 天才共振箱', energy: '雙方都有 43-23 通道！對話外人聽不懂但秒懂。', channels: '📡 43-23 雙倍加成：效率最高的腦力激盪。', advice: '請珍惜這位知音。' },
+            'chris_kathy': { title: '🤝 家族企業基石', energy: '家族與商業的完美閉環。有錢又有愛。', channels: '💰 商業大通道：21-45 接通 37-40，大富大貴。', advice: 'Kathy 提供歸屬感，Chris 提供資源。' },
+            'chris_sunny': { title: '📡 天才熱線', energy: 'Chris 是生產者天才，晴日是投射者智者。', channels: '🧠 43-23 共振：晴日引導 Chris 落地。', advice: 'Chris 請耐心等晴日；晴日請包容 Chris 情緒。' },
+            'chris_yiting': { title: '⚡ 頓悟與直覺', energy: '特拉能瞬間知道 Chris 的怪點子會不會中。', channels: '🔌 21-45 共振：都對掌控權敏感，請劃分領地。', advice: 'Chris 別辯論邏輯；特拉給 Chris 時間推導。' },
+
+            // Cindy
+            'cindy_f': { title: '🧭 導航與引擎', energy: 'Fay 載著 Cindy，就是最強賽車組合。', channels: '🏎️ 賽車手與領航員：Fay 提供動能，Cindy 提供方向。', advice: 'Fay 問 Cindy 往哪走，然後踩油門。' },
+            'cindy_jiuan': { title: '🎉 體驗夥伴', energy: '像姐妹淘，一起探索新事物。', channels: '✨ 空白情緒共鳴：理智且舒服的避風港。', advice: '注意情緒共感，一人低潮另一人要抽離。' },
+            'cindy_jp': { title: '🧪 直覺試錯', energy: 'JP 到處碰撞，Cindy 幫忙把關。', channels: '🛡️ 守護與衝撞：Cindy 包容 JP 的混亂。', advice: 'JP 利用 Cindy 薦骨篩選選項。' },
+            'cindy_kathy': { title: '🏠 溫暖依靠', energy: 'Kathy 像媽媽，Cindy 是敏感的女兒。', channels: '💞 5-15 韻律共振：生活步調非常合拍。', advice: 'Kathy 別給壓力；Cindy 多給擁抱。' },
+            'cindy_sunny': { title: '📯 國師與指南針', energy: '晴日看大方向，Cindy 看當下路況。', channels: '🌍 天地連線：讓夢想落地的組合。', advice: '晴日多問是非題；Cindy 給晴日時間。' },
+            'cindy_yiting': { title: '⚡ 直覺雙核心', energy: '唯二的當下決策者，反應極快。', channels: '🚀 極速反應：眼神交流就能確認意願。', advice: '互相掩護，聯手推動會議進度。' },
+
+            // F
+            'f_jiuan': { title: '🔥 專注與探索', energy: 'Fay 專注執行，酒安探索變動。', channels: '🔌 通道互補：一內一外，擴大版圖。', advice: '酒安別打斷 Fay；Fay 別限制酒安。' },
+            'f_jp': { title: '🏗️ 實作與實驗', energy: 'Fay 討厭錯誤，JP 需要錯誤。', channels: '⚙️ 怪才與將軍：JP 研發新法，Fay 執行。', advice: 'Fay 理解錯誤是過程；JP 有把握再請 Fay 做。' },
+            'f_kathy': { title: '🛡️ 戰士與後盾', energy: 'Fay 衝鋒，Kathy 補給。', channels: '🏠 家與戰場：Kathy 是 Fay 的避風港。', advice: 'Fay 記得回家充電；Kathy 體諒 Fay 忙碌。' },
+            'f_sunny': { title: '⚡ 力量與號角', energy: '晴日指引方向，Fay 帶領大家衝過去。', channels: '📣 賦予意義：晴日告訴 Fay 為什麼要忙。', advice: '晴日別碎念細節；Fay 尊重高維視角。' },
+            'f_yiting': { title: '🚀 極速連線 (34-57)', energy: '全隊反應最快、爆發力最強的組合。', channels: '⚡ 34-57 力量通道：特拉直覺瞬間被 Fay 執行。', advice: '特拉指哪裡，Fay 打哪裡。' },
+
+            // Jiuan
+            'jiuan_jp': { title: '🎢 冒險雙人組', energy: '最不怕摔、最愛嘗試新東西的一對。', channels: '🎉 情緒共振：團隊的歡樂製造機。', advice: '一起冒險，但記得設停損點。' },
+            'jiuan_kathy': { title: '🏠 浪子與港灣', energy: '酒安愛跑，Kathy 守家。', channels: '⚓ 風箏與線：Kathy 提供安全感讓酒安飛。', advice: '酒安定期報平安；Kathy 放手讓風箏飛。' },
+            'jiuan_sunny': { title: '🌍 體驗與觀察', energy: '酒安體驗，晴日觀察總結。', channels: '🎓 導師與學徒：酒安是素材，晴日是智囊。', advice: '酒安分享故事，晴日提煉智慧。' },
+            'jiuan_yiting': { title: '🦋 變動與衝擊', energy: '特拉用權力打破，酒安用體驗打破。', channels: '💥 改革力量：特拉發起，酒安推廣。', advice: '特拉發起後，讓酒安去第一線安撫。' },
+
+            // JP
+            'jp_kathy': { title: '🧪 研究與支持', energy: 'JP 鑽研，Kathy 給予支持與包容。', channels: '💗 天才的後盾：Kathy 是 JP 最大贊助商。', advice: 'JP 成果貢獻家族；Kathy 多鼓勵。' },
+            'jp_sunny': { title: '🔭 試錯與典範', energy: '1/3 探索者遇上 6/2 旁觀者。', channels: '🧠 43-23 共振：傳承關係，避免致命錯誤。', advice: '晴日慈悲引導；JP 多請教智慧。' },
+            'jp_yiting': { title: '⚡ 創新與直覺', energy: 'JP 數據支持特拉的直覺。', channels: '🔌 邏輯與本能：補上完美邏輯論述。', advice: '特拉給時間驗證；JP 相信特拉第一感。' },
+
+            // Kathy
+            'kathy_sunny': { title: '🏠 家族導師', energy: 'Kathy 顧生活，晴日顧靈魂。', channels: '🔥 暖心組合：身心靈都健康。', advice: '一起營造家的感覺。' },
+            'kathy_yiting': { title: '👑 國王與皇后', energy: '特拉主外，Kathy 主內。', channels: '🤝 完美商業閉環：穩固的組織架構。', advice: '特拉尊重 Kathy 付出；Kathy 理解特拉孤僻。' },
+
+            // Sunny
+            'sunny_yiting': { title: '🌩️ 閃電與雷聲', energy: '王者與國師。特拉衝，晴日看。', channels: '✨ 2爻共振：理解彼此需要躲起來。', advice: '特拉別催；晴日別拉。發起前先問晴日。' }
+        };
+
+        // 3. 配對分析程式
+        function analyzePair() {
+            const p1Key = document.getElementById('personA').value;
+            const p2Key = document.getElementById('personB').value;
+
+            if (!p1Key || !p2Key) { alert('請先選擇兩位成員！'); return; }
+            if (p1Key === p2Key) { alert('請選擇不同的兩個人進行配對！'); return; }
+
+            const p1 = members[p1Key];
+            const p2 = members[p2Key];
+            const resultCard = document.getElementById('pairResult');
+            
+            // 產生 key
+            const pairKey = [p1Key, p2Key].sort().join('_');
+            const vipData = relationshipDB[pairKey];
+
+            // 顯示
+            document.getElementById('resNames').innerHTML = `${p1.name} <span style="font-size:0.7em; color:#999;">&</span> ${p2.name}`;
+            
+            if (vipData) {
+                document.getElementById('resType').innerText = vipData.title;
+                document.getElementById('resEnergy').innerText = vipData.energy;
+                document.getElementById('resChannels').innerHTML = vipData.channels;
+                document.getElementById('resAdvice').innerHTML = vipData.advice;
+            } else {
+                document.getElementById('resType').innerText = "潛力組合";
+                document.getElementById('resEnergy').innerText = "這是一個充滿可能性的組合！";
+                document.getElementById('resChannels').innerHTML = "雙方依賴類型與人生角色的互補運作。";
+                document.getElementById('resAdvice').innerHTML = "請互相尊重彼此的運作機制，觀察火花。";
+            }
+
+            resultCard.style.display = 'block';
+
+            // 手機版自動捲動到結果
+            if (window.innerWidth <= 768) {
+                setTimeout(() => {
+                    resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+
+        // 4. 修正後的顯示切換功能 (接收 this)
+        function showTab(tabId, btnElement) {
+            // 隱藏所有區塊
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // 移除所有按鈕 active 狀態
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // 顯示目標區塊
+            const targetSection = document.getElementById(tabId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // 讓點擊的按鈕變色
+            if (btnElement) {
+                btnElement.classList.add('active');
+            }
+
+            // 手機版點選後自動滾動到頂部
+            if (window.innerWidth <= 768) {
+                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                document.querySelector('.main-content').scrollTo(0,0);
+            }
+        }
+    </script>
+</body>
+</html>
