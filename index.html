@@ -126,34 +126,84 @@
         .strat-step { background: white; padding: 15px 25px; border-radius: 50px; font-weight: bold; box-shadow: 0 3px 10px rgba(0,0,0,0.05); display: flex; align-items: center; border: 1px solid #eee; }
         .arrow { color: #ccc; font-size: 1.5rem; margin: 0 5px; }
 
-        /* Mobile Responsiveness - Optimized for Compact View */
+        /* =========================================
+           MOBILE RESPONSIVE: 3x3 GRID + COMPACT CARDS
+           ========================================= */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             
-            /* Sidebar Changes */
-            .sidebar { width: 100%; height: auto; position: relative; padding: 10px 0; flex-direction: row; overflow-x: auto; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+            /* 1. 導覽列：3x3 九宮格設定 */
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                position: relative; 
+                padding: 10px; 
+                display: grid;  /* 啟動網格 */
+                grid-template-columns: repeat(3, 1fr); /* 分三欄 */
+                gap: 8px; 
+                overflow: visible;
+                flex-direction: unset;
+                white-space: unset;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+
+            /* 隱藏不需要的元素 */
             .brand { display: none; }
             .nav-group-title { display: none; }
-            .nav-btn { width: auto; padding: 8px 16px; border-radius: 20px; margin: 5px; border-left: none; background: rgba(255,255,255,0.15); font-size: 0.9rem; }
-            .nav-btn.active { background-color: var(--accent-color); border-left: none; }
             .nav-role { display: none; }
+
+            /* 讓群組內的按鈕直接參與網格 (打破 div 限制) */
+            .nav-group { display: contents; }
+
+            /* 按鈕樣式 */
+            .nav-btn { 
+                width: 100%; 
+                padding: 12px 2px; 
+                border-radius: 8px; 
+                margin: 0; 
+                border-left: none; 
+                background: rgba(255,255,255,0.15); 
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                font-size: 0.95rem;
+            }
             
-            /* Content Changes */
+            .nav-btn:hover { padding-left: 2px; background: rgba(255,255,255,0.25); }
+
+            /* 讓「戰略總表」按鈕橫跨整排 */
+            .sidebar > .nav-btn:first-of-type {
+                grid-column: 1 / -1; /* 跨滿 3 欄 */
+                background-color: var(--accent-color);
+                font-weight: bold;
+                margin-bottom: 5px;
+                font-size: 1.1rem;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+
+            .nav-btn.active { 
+                background-color: var(--accent-color); 
+                color: white;
+            }
+            
+            /* 2. 內容區塊調整 */
             .main-content { margin-left: 0; width: 100%; padding: 15px; }
             h1 { font-size: 1.5rem; }
             .card { padding: 15px; margin-bottom: 15px; }
-            .strat-step { font-size: 0.8rem; padding: 8px 12px; margin-bottom: 5px; }
-            .arrow { display: none; } /* Hide arrows on mobile to save space */
-            .strat-map { flex-direction: column; gap: 5px; align-items: stretch; }
-            .strat-step { text-align: center; width: 100%; display: block; }
+            
+            /* 流程圖改垂直堆疊 */
+            .arrow { display: none; }
+            .strat-map { flex-direction: column; gap: 8px; }
+            .strat-step { width: 100%; justify-content: center; font-size: 0.9rem; }
 
-            /* COMPACT TABLE GRID FOR MOBILE */
+            /* 3. 表格轉雙欄小卡片 */
             table, thead, tbody, th, td, tr { display: block; }
-            thead { display: none; } /* Hide headers */
+            thead { display: none; }
             
             tbody {
                 display: grid;
-                grid-template-columns: 1fr 1fr; /* Two columns */
+                grid-template-columns: 1fr 1fr; /* 雙欄 */
                 gap: 10px;
             }
 
@@ -168,39 +218,22 @@
                 height: 100%;
             }
 
-            td {
-                padding: 2px 0;
-                border: none;
-                font-size: 0.85rem;
+            td { padding: 2px 0; border: none; font-size: 0.85rem; }
+            
+            /* 調整卡片內順序 */
+            td:nth-of-type(2) { /* 姓名 */
+                font-weight: bold; font-size: 1.1rem; color: var(--primary-color); order: 1; 
             }
-
-            /* Name & Role Styling */
-            td:nth-of-type(2) { /* Name */
-                font-weight: bold;
-                font-size: 1.1rem;
-                color: var(--primary-color);
-                order: 1; /* Name first */
+            td:nth-of-type(1) { /* 角色標籤 */
+                order: 2; margin-bottom: 5px; 
             }
-            td:nth-of-type(1) { /* Role Tag */
-                order: 2;
-                margin-bottom: 5px;
-            }
-            td:nth-of-type(4) { /* Core Function */
-                order: 3;
-                color: #555;
-                line-height: 1.3;
-                margin-top: 5px;
-                font-size: 0.8rem;
-                /* Truncate text */
-                display: -webkit-box;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
+            td:nth-of-type(4) { /* 核心功能 */
+                order: 3; color: #555; font-size: 0.8rem; line-height: 1.3;
+                display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
             }
             
-            /* Hide less critical info on overview to save space */
-            td:nth-of-type(3) { display: none; } /* Hide Type */
-            td:nth-of-type(5) { display: none; } /* Hide Guide */
+            /* 隱藏不重要的資訊 */
+            td:nth-of-type(3), td:nth-of-type(5) { display: none; }
         }
     </style>
 </head>
@@ -254,6 +287,7 @@
                     <div class="strat-step">4. ⚔️ 生產者 執行</div>
                     <div class="strat-step">5. 🏠 凱西 穩固</div>
                 </div>
+                <p style="text-align: center; color: #7f8c8d; font-size: 0.9rem; margin-top: 10px; font-style: italic;">⚠️ 決策時差提醒：僅 特拉 & Cindy 可當下決策，其餘 7 人皆需「等待」。</p>
             </div>
 
             <div class="card" style="background-color: transparent; box-shadow: none; padding: 0;">
